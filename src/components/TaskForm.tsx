@@ -18,6 +18,12 @@ export default function TaskForm({ onAddTask }: TaskFormProps) {
     setNewTask("");
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleAddTask(); 
+    }
+  };
+
   return (
     <div className="flex gap-2 mb-4">
       <Input
@@ -26,6 +32,7 @@ export default function TaskForm({ onAddTask }: TaskFormProps) {
         onChange={(e) => setNewTask(e.target.value)}
         placeholder="Add a new task"
         className="m-1"
+        onKeyDown={handleKeyDown}
       />
       <Button onClick={handleAddTask} className="mt-1">Add Task</Button>
     </div>

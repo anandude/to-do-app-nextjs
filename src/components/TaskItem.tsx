@@ -8,8 +8,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import DeleteButton from "./ui/DeleteButton";
 
 interface Task {
   id: string;
@@ -50,14 +49,15 @@ export default function TaskItem({ task, onUpdateStatus, onDeleteTask }: TaskIte
           <SelectItem value="completed">Completed</SelectItem>
         </SelectContent>
       </Select>
-      <Button
+      {/* <Button
         variant="ghost"
         size="icon"
         onClick={() => onDeleteTask(task.id)}
         aria-label="Delete task"
-      >
-        <Trash2 className="h-4 w-4 text-red-500" />
-      </Button>
+      > */}
+        <DeleteButton onDelete={() => onDeleteTask(task.id)}/>
+        
+      {/* </Button> */}
     </li>
   );
 }
