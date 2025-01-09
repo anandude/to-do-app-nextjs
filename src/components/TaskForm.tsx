@@ -25,8 +25,9 @@ export default function TaskForm({ onAddTask }: TaskFormProps) {
         value={newTask}
         onChange={(e) => setNewTask(e.target.value)}
         placeholder="Add a new task"
+        className="m-1"
       />
-      <Button onClick={handleAddTask}>Add Task</Button>
+      <Button onClick={handleAddTask} className="mt-1">Add Task</Button>
     </div>
   );
 }

@@ -19,7 +19,7 @@ interface Task {
 
 interface TaskItemProps {
   task: Task;
-  onUpdateStatus: (id: string, newStatus: Task["status"]) => void;
+  onUpdateStatus: (id: string, newStatus: Task["status"]) => void; 
   onDeleteTask: (id: string) => void;
 }
 
