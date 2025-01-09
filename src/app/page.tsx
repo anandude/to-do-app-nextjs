@@ -87,7 +87,7 @@ export default function Home() {
             placeholder="Add a new task"
             className="m-1 min-h-10"
           />
-          <Button onClick={addTask} className="min-h-10">Add Task</Button>
+          <Button onClick={addTask} className="min-h-10 mt-1">Add Task</Button>
         </div>
         
         <ul>
