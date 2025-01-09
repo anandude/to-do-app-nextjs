@@ -9,6 +9,7 @@ import {
   addDoc,
   updateDoc,
   doc,
+  deleteDoc,
 } from "firebase/firestore";
 import {
   Select,
@@ -18,6 +19,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Trash2 } from "lucide-react"; 
 
 import { db } from "../database/firebase";
 
@@ -49,6 +51,10 @@ export default function Home() {
     await updateDoc(doc(db, "tasks", taskId), {
       status: newStatus,
     });
+  };
+
+  const deleteTask = async (taskId) => {
+    await deleteDoc(doc(db, "tasks", taskId));
   };
 
   return (
@@ -98,6 +104,14 @@ export default function Home() {
                   <SelectItem value="completed">Completed</SelectItem>
                 </SelectContent>
               </Select>
+              <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => deleteTask(task.id)}
+              aria-label="Delete task"
+            >
+              <Trash2 className="h-4 w-4 text-red-500" />
+            </Button>
             </li>
           ))}
         </ul>
