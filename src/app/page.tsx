@@ -64,7 +64,7 @@ export default function Home() {
   return (
     <div className="flex justify-center items-center h-screen">
       <ScrollArea className="p-6">
-        <div className="w-[700] h-[600]">
+        <div className="w-[700] h-[600] min-h-custom min-w-custom">
           <h1 className="text-2xl font-bold mb-4 text-center">To-Do List</h1>
           <TaskForm onAddTask={addTask} />
           <TaskList
