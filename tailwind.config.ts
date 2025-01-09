@@ -55,7 +55,13 @@ export default {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		}
+  		},
+		  minHeight: {
+			'custom': '600px', // your custom min-height
+		  },
+		  minWidth: {
+			'custom': '700px', // your custom min-width
+		  },
   	}
   },
   plugins: [require("tailwindcss-animate")],

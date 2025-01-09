@@ -77,7 +77,7 @@ export default function Home() {
   return (
     <div className="flex justify-center items-center h-screen">
       <ScrollArea className="p-6">
-      <div className="w-[700] h-[600] min-h-[600] min-w-[700]">
+      <div className="w-[700] h-[600] min-h-custom min-w-custom">
         <h1 className="text-2xl font-bold mb-4 text-center">To-Do List</h1>
         <div className="flex gap-2 mb-4">
           <Input
@@ -85,9 +85,9 @@ export default function Home() {
             value={newTask}
             onChange={(e) => setNewTask(e.target.value)}
             placeholder="Add a new task"
-            className="m-1"
+            className="m-1 min-h-10"
           />
-          <Button onClick={addTask}>Add Task</Button>
+          <Button onClick={addTask} className="min-h-10">Add Task</Button>
         </div>
         
         <ul>
