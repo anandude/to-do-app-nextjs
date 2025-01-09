@@ -23,16 +23,23 @@ import { Trash2 } from "lucide-react";
 
 import { db } from "../database/firebase";
 
+interface Task {
+  id: string;
+  text: string;
+  status: string;
+}
+
 export default function Home() {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] =  useState<Task[]>([]);
   const [newTask, setNewTask] = useState("");
 
   useEffect(() => {
     const q = query(collection(db, "tasks"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const tasksArray = [];
+      const tasksArray: Task[] = [];
       querySnapshot.forEach((doc) => {
-        tasksArray.push({ ...doc.data(), id: doc.id });
+        const data = doc.data();
+        tasksArray.push({ id: doc.id, text: data.text, status: data.status });
       });
       setTasks(tasksArray);
     });
@@ -47,13 +54,23 @@ export default function Home() {
     setNewTask("");
   };
 
-  const updateTaskStatus = async (taskId, newStatus) => {
+
+  //TYPESCRIPT USED
+  interface UpdateTaskStatus {
+    (taskId: string, newStatus: string): Promise<void>;
+  }
+
+  const updateTaskStatus: UpdateTaskStatus = async (taskId, newStatus) => {
     await updateDoc(doc(db, "tasks", taskId), {
       status: newStatus,
     });
   };
 
-  const deleteTask = async (taskId) => {
+  interface DeleteTask {
+    (taskId: string): Promise<void>;
+  }
+
+  const deleteTask: DeleteTask = async (taskId) => {
     await deleteDoc(doc(db, "tasks", taskId));
   };
 
@@ -68,6 +85,7 @@ export default function Home() {
             value={newTask}
             onChange={(e) => setNewTask(e.target.value)}
             placeholder="Add a new task"
+            className="m-1"
           />
           <Button onClick={addTask}>Add Task</Button>
         </div>
