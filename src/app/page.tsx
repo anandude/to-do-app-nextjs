@@ -7,6 +7,7 @@ import { db } from "../database/firebase";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import TaskForm from "@/components/TaskForm";
 import TaskList from "@/components/ui/TaskList";
+import { PaginationDemo } from "@/components/ui/paginationDemo";
 
 type Task = {
   id: string;
@@ -73,7 +74,10 @@ export default function Home() {
             onDeleteTask={deleteTask}
           />
         </div>
+    <PaginationDemo/>
+
       </ScrollArea>
+      
     </div>
   );
 }
