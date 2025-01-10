@@ -20,6 +20,7 @@ import {
   serverTimestamp,
   FieldValue,
   Timestamp,
+  QuerySnapshot,
 } from "firebase/firestore";
 import { db } from "../database/firebase";
 import { ScrollArea } from "@/components/ui/scroll-area";
