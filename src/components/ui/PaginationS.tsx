@@ -7,6 +7,14 @@ import {
     PaginationNext,
     PaginationPrevious,
   } from "@/components/ui/pagination";
+
+  interface PaginationDemoProps {
+    currentPage: number;
+    totalPages: number;
+    onNextPage: () => void;
+    onPreviousPage: () => void;
+    onPageChange: (page: number) => void;
+  }
   
   export default function PaginationDemo({
     currentPage,
@@ -14,7 +22,7 @@ import {
     onNextPage,
     onPreviousPage,
     onPageChange,
-  }) {
+  }: PaginationDemoProps) {
     const renderPageNumbers = () => {
       const pages = [];
   
