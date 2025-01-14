@@ -14,6 +14,7 @@ interface Task {
   id: string;
   text: string;
   status: "not-started" | "ongoing" | "completed";
+  createdAt: string;
 }
 
 interface TaskItemProps {
@@ -36,6 +37,7 @@ export default function TaskItem({ task, onUpdateStatus, onDeleteTask }: TaskIte
       >
         {task.text}
       </span>
+      <p className="text-xs text-gray-500">{task.createdAt}</p>
       <Select
         value={task.status}
         onValueChange={(newStatus) => onUpdateStatus(task.id, newStatus as Task["status"])}

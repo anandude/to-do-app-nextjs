@@ -23,6 +23,7 @@ import {
   QuerySnapshot,
 } from "firebase/firestore";
 import { db } from "../database/firebase";
+import {format} from "date-fns";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import TaskForm from "@/components/TaskForm";
 import TaskList from "@/components/ui/TaskList";
@@ -33,6 +34,7 @@ type Task = {
   id: string;
   text: string;
   status: "not-started" | "ongoing" | "completed";
+  createdAt: string;
 };
 
 interface NewTask {
@@ -43,26 +45,33 @@ interface NewTask {
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot<DocumentData> | null>(null);
+  const [lastDoc, setLastDoc] =
+    useState<QueryDocumentSnapshot<DocumentData> | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [firstDoc, setFirstDoc] = useState<QueryDocumentSnapshot<DocumentData> | null>(null);
+  const [firstDoc, setFirstDoc] =
+    useState<QueryDocumentSnapshot<DocumentData> | null>(null);
   const [totalPages, setTotalPages] = useState(0);
-  const [pageCache, setPageCache] = useState<Map<number, QueryDocumentSnapshot<DocumentData>>>(new Map());
+  const [pageCache, setPageCache] = useState<
+    Map<number, QueryDocumentSnapshot<DocumentData>>
+  >(new Map());
   const tasksPerPage = 7;
 
   // Modified total pages calculation
   useEffect(() => {
     const unsubscribe = onSnapshot(
-      query(collection(db, "tasks"), orderBy("createdAt", "desc")), 
+      query(collection(db, "tasks"), orderBy("createdAt", "desc")),
       async (snapshot) => {
         // Get actual count of documents
         const actualCount = snapshot.size;
-        const calculatedPages = Math.max(1, Math.ceil(actualCount / tasksPerPage));
-        
+        const calculatedPages = Math.max(
+          1,
+          Math.ceil(actualCount / tasksPerPage)
+        );
+
         // Only update if the calculated pages is different
         if (calculatedPages !== totalPages) {
           setTotalPages(calculatedPages);
-          
+
           // If current page is beyond the new total, reset to last valid page
           if (currentPage > calculatedPages) {
             setCurrentPage(calculatedPages);
@@ -83,11 +92,15 @@ export default function Home() {
   }, [currentPage, totalPages]);
 
   // Helper function to update tasks from snapshot
-  const updateTasksFromSnapshot = (querySnapshot: QuerySnapshot<DocumentData>) => {
+  const updateTasksFromSnapshot = (
+    querySnapshot: QuerySnapshot<DocumentData>
+  ) => {
     const tasksArray: Task[] = [];
     querySnapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
       const data = doc.data();
-      tasksArray.push({ id: doc.id, text: data.text, status: data.status });
+      tasksArray.push({ id: doc.id, text: data.text, status: data.status,createdAt: data.createdAt
+        ? format(data.createdAt.toDate(), "dd MMM yyyy, hh:mm a")
+        : "Unknown", });
     });
     setTasks(tasksArray);
     if (querySnapshot.docs.length > 0) {
@@ -105,8 +118,11 @@ export default function Home() {
     );
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       updateTasksFromSnapshot(querySnapshot);
-      
-      const newPageCache = new Map<number, QueryDocumentSnapshot<DocumentData>>();
+
+      const newPageCache = new Map<
+        number,
+        QueryDocumentSnapshot<DocumentData>
+      >();
       if (querySnapshot.docs.length > 0) {
         newPageCache.set(1, querySnapshot.docs[0]);
         setPageCache(newPageCache);
@@ -129,7 +145,7 @@ export default function Home() {
         return;
       }
       updateTasksFromSnapshot(querySnapshot);
-      setPageCache(prev => {
+      setPageCache((prev) => {
         const newCache = new Map(prev);
         newCache.set(currentPage + 1, querySnapshot.docs[0]);
         return newCache;
@@ -152,7 +168,7 @@ export default function Home() {
         return;
       }
       updateTasksFromSnapshot(querySnapshot);
-      setPageCache(prev => {
+      setPageCache((prev) => {
         const newCache = new Map(prev);
         newCache.set(currentPage - 1, querySnapshot.docs[0]);
         return newCache;
@@ -163,7 +179,7 @@ export default function Home() {
 
   const handlePageChange = async (page: number) => {
     if (page === currentPage || page > totalPages || page < 1) return;
-    
+
     if (page === currentPage + 1) {
       fetchNextPage();
       return;
@@ -200,24 +216,32 @@ export default function Home() {
     if (docs.length === 0) return;
 
     const startIndex = (page - 1) * tasksPerPage;
-    const pageDocs = docs.slice(startIndex, Math.min(startIndex + tasksPerPage, docs.length));
-    
+    const pageDocs = docs.slice(
+      startIndex,
+      Math.min(startIndex + tasksPerPage, docs.length)
+    );
+
     const tasksArray: Task[] = [];
     pageDocs.forEach((doc) => {
       const data = doc.data();
-      tasksArray.push({ id: doc.id, text: data.text, status: data.status });
+      tasksArray.push({ 
+        id: doc.id, 
+        text: data.text, 
+        status: data.status, 
+        createdAt: data.createdAt ? format(data.createdAt.toDate(), "dd MMM yyyy, hh:mm a") : "Unknown" 
+      });
     });
-    
+
     setTasks(tasksArray);
     setFirstDoc(pageDocs[0]);
     setLastDoc(pageDocs[pageDocs.length - 1]);
-    
-    setPageCache(prev => {
+
+    setPageCache((prev) => {
       const newCache = new Map(prev);
       newCache.set(page, pageDocs[0]);
       return newCache;
     });
-    
+
     setCurrentPage(page);
   };
 
@@ -225,12 +249,15 @@ export default function Home() {
     const newTask: NewTask = {
       text: newTaskText,
       status: "not-started",
-      createdAt: serverTimestamp()
+      createdAt: serverTimestamp(),
     };
     await addDoc(collection(db, "tasks"), newTask);
   };
 
-  const updateTaskStatus = async (taskId: string, newStatus: string): Promise<void> => {
+  const updateTaskStatus = async (
+    taskId: string,
+    newStatus: string
+  ): Promise<void> => {
     await updateDoc(doc(db, "tasks", taskId), {
       status: newStatus,
     });
@@ -246,10 +273,18 @@ export default function Home() {
         <ScrollArea className="p-6">
           <div className="w-[700] h-[600] min-h-custom min-w-custom">
             <h1 className="text-2xl font-bold mb-4 text-center items-center">
-              To-Do List</h1>
+              To-Do List
+            </h1>
             <TaskForm onAddTask={addTask} />
             <TaskList
-              tasks={tasks}
+              tasks={[...tasks].sort((a, b) => {
+                const statusOrder = {
+                  ongoing: 1,
+                  "not-started": 2,
+                  completed: 3,
+                };
+                return statusOrder[a.status] - statusOrder[b.status];
+              })}
               onUpdateStatus={updateTaskStatus}
               onDeleteTask={deleteTask}
             />

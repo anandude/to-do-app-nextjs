@@ -7,6 +7,7 @@ interface Task {
   id: string;
   text: string;
   status: "not-started" | "ongoing" | "completed";
+  createdAt: string;
 }
 
 interface TaskListProps {
