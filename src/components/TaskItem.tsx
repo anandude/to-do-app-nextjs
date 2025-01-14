@@ -32,7 +32,7 @@ export default function TaskItem({
     <li
       className={`flex items-center gap-4 mb-4 p-2 border rounded ${
         task.status === "ongoing"
-          ? "bg-amber-200"
+          ? "bg-orange-200"
           : task.status === "not-started"
           ? "bg-gray-200"
           : task.status === "completed"
