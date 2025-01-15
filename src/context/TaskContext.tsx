@@ -56,7 +56,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
 
   // Modified total pages calculation
   useEffect(() => {
-    if (!user) return;
+    if (!user || !user.uid) return;
 
     const unsubscribe = onSnapshot(
       query(
@@ -122,7 +122,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
 
   // Initial page load
   useEffect(() => {
-    if (!user) return;
+    if (!user || !user.uid) return;
 
     const q = query(
       collection(db, "tasks"),
@@ -146,7 +146,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
   }, [user]);
 
   const fetchNextPage = () => {
-    if (currentPage >= totalPages || !lastDoc || !user) return;
+    if (currentPage >= totalPages || !lastDoc || !user || !user.uid) return;
     const q = query(
       collection(db, "tasks"),
       where("created_by", "==", user.uid),
@@ -170,7 +170,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
   };
 
   const fetchPreviousPage = () => {
-    if (currentPage <= 1 || !firstDoc || !user) return;
+    if (currentPage <= 1 || !firstDoc || !user || !user.uid) return;
     const q = query(
       collection(db, "tasks"),
       where("created_by", "==", user.uid),
@@ -194,7 +194,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
   };
 
   const handlePageChange = async (page: number) => {
-    if (page === currentPage || page > totalPages || page < 1 || !user) return;
+    if (page === currentPage || page > totalPages || page < 1 || !user || !user.uid) return;
 
     if (page === currentPage + 1) {
       fetchNextPage();
@@ -267,7 +267,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
   };
 
   const addTask = async (newTaskText: string): Promise<void> => {
-    if (!user) return;
+    if (!user || !user.uid) return;
     const newTask: NewTask = {
       text: newTaskText,
       status: "not-started",
