@@ -1,20 +1,18 @@
-
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD2Wc1SDWQRbRFlrLN67qo1r2hRpKn1d4Q",
-  authDomain: "to-do-app-nextjs-21adb.firebaseapp.com",
-  projectId: "to-do-app-nextjs-21adb",
-  storageBucket: "to-do-app-nextjs-21adb.firebasestorage.app",
-  messagingSenderId: "342816706014",
-  appId: "1:342816706014:web:1982a3791af7a9e759e14f"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
-
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-export {db};
+export { db };
 export const auth = getAuth(app);
