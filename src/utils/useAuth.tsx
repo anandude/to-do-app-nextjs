@@ -5,23 +5,23 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { auth } from "../database/firebase";
 import { User } from 'firebase/auth';
-import { setPersistence, browserSessionPersistence } from 'firebase/auth';
+// import { setPersistence, browserSessionPersistence } from 'firebase/auth';
 
 const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    const setAuthPersistence = async () => {
-      try {
-        await setPersistence(auth, browserSessionPersistence);
-      } catch (error) {
-        console.error('Error setting persistence:', error);
-      }
-    };
+    // const setAuthPersistence = async () => {
+    //   try {
+    //     await setPersistence(auth, browserSessionPersistence);
+    //   } catch (error) {
+    //     console.error('Error setting persistence:', error);
+    //   }
+    // };
 
     if (typeof window !== 'undefined') {
-      setAuthPersistence();
+      // setAuthPersistence();
 
       const unsubscribe = auth.onAuthStateChanged((user) => {
         if (user) {

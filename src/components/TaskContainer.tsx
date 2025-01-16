@@ -53,7 +53,7 @@ export const TaskContainer: React.FC<TaskContainerProps> = ({ onSignOut }) => {
             onPreviousPage={fetchPreviousPage}
             onPageChange={handlePageChange}
           />
-          <Button variant="destructive" onClick={onSignOut}>
+          <Button variant="secondary" onClick={onSignOut}>
             Sign Out
           </Button>
         </div>
